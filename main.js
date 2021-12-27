@@ -35,7 +35,11 @@ selectSymbol.addEventListener('change', (e)=> {
     printPlayerTurn();
 })
 
-const grid = [0,1,2,3,4,5,6,7,8];
+let grid = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+  ];
 
 //Set the current player
 currentPlayer = player1;
@@ -47,13 +51,14 @@ currentPlayer = player1;
         }
 
     function setBoard() {
-        for (let i = 0; i < grid.length; i++) {
+        for (let rows = 0; rows < grid.length; rows++) {
+            for(let columns = 0; columns< grid[0].length; columns++){   
             const divBoard = document.createElement("div");
-                divBoard.setAttribute('data-game', grid.indexOf(i))
+                divBoard.setAttribute('data-game', grid[rows][columns])
                 gameBoard.insertAdjacentElement("beforeend", divBoard);
                 divBoard.addEventListener('click', selected);
-            
         }
+    }
         printPlayerTurn();
     }
     
@@ -61,14 +66,20 @@ currentPlayer = player1;
         // if empty add symbol of the player
         if (x.target.textContent == '' ) {
             x.target.textContent = currentPlayer.symbol;
-            // grid = currentPlayer.symbol;
+            console.log();
+            //grid[x.target][x.target] = currentPlayer.symbol;
             currentP();
             printPlayerTurn();
-            console.log(grid[x.target]);
-            console.log(grid.indexOf(x));
-        
+            if (checkWin(currentPlayer)){
+                console.log('win');
+            }
+           
+            console.log(grid);
+            
         }
     }
+
+
     function clearGame() {
         gameBoard.querySelectorAll('div').forEach(elem => elem.remove());
         pTurn.innerHTML = "";
@@ -81,22 +92,19 @@ currentPlayer = player1;
 
 
 // Check winner 
-const winCombos = [
-    [0,1,2],
-    [0,3,6],
-    [3,4,5],
-    [6,7,8],
-    [1,4,7],
-    [2,4,6],
-    [2,5,8],
-    [0,4,8]
-];
-winCombos.forEach(combo => console.log(combo));
-winCombos.forEach(combo => 
-    combo.forEach(function(nb) {
-        console.log(nb)
-        if (nb === 'X') {
-          console.log('win');
-        }
-      }));
+function checkWin(currentPlayer) {
+
+    const rotatedGrid = grid[0].map((_, i) => grid.map((line) => line[i]))
+  
+    if (grid.some(line => line.every(tile => tile === currentPlayer.symbol))) return true;
+  //If the value of row is the same return true
+    else if (rotatedGrid.some(line => line.every(tile => tile === currentPlayer.symbol))) return true;
+  //If the value of column is the same return true
+    else if ([0, 1, 2].every(i => grid[i][i]) === currentPlayer.symbol) return true;
+  //If the diag top left to bottom right are the same return true 
+    else if ([0, 1, 2].every(i => grid[i][2 - i]) === currentPlayer.symbol) return true;
+  //If the diag top right to bottom left are the same return true 
+    else return false;
+  //return false if nothing is true
+  }
 
