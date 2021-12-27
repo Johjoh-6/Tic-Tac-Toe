@@ -36,9 +36,9 @@ selectSymbol.addEventListener('change', (e)=> {
 })
 
 let grid = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8]
   ];
 
 //Set the current player
@@ -66,8 +66,8 @@ currentPlayer = player1;
         // if empty add symbol of the player
         if (x.target.textContent == '' ) {
             x.target.textContent = currentPlayer.symbol;
-            console.log();
-            //grid[x.target][x.target] = currentPlayer.symbol;
+            let slot = x.target.getAttribute('data-game');
+            getSelectedGrid(slot);
             currentP();
             printPlayerTurn();
             if (checkWin(currentPlayer)){
@@ -78,11 +78,21 @@ currentPlayer = player1;
             
         }
     }
-
+    function getSelectedGrid(value){
+        //3 for the 3 in the row and column, square of 9
+        let row = Math.floor(value / 3);
+        let column = (value % 3);
+        grid[row][column] = currentPlayer.symbol;
+    }
 
     function clearGame() {
         gameBoard.querySelectorAll('div').forEach(elem => elem.remove());
         pTurn.innerHTML = "";
+        grid = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8]
+          ];
         }
     // Reset game
    btnReset.addEventListener('click', (e)=> {
