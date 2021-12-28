@@ -3,6 +3,7 @@ const selectSymbol = document.querySelector('#symbol');
 const gameBoard = document.querySelector('#gameboard');
 const pTurn = document.querySelector('#turn');
 let currentPlayer;
+let turn = 0;
 
 class Player {
     constructor(
@@ -55,28 +56,35 @@ currentPlayer = player1;
             for(let columns = 0; columns< grid[0].length; columns++){   
             const divBoard = document.createElement("div");
                 divBoard.setAttribute('data-game', grid[rows][columns])
+                divBoard.className = "game-box";
                 gameBoard.insertAdjacentElement("beforeend", divBoard);
                 divBoard.addEventListener('click', selected);
         }
     }
         printPlayerTurn();
+    
     }
     
     function selected(x){
         // if empty add symbol of the player
         if (x.target.textContent == '' ) {
+            turn++;
             x.target.textContent = currentPlayer.symbol;
             let slot = x.target.getAttribute('data-game');
-            getSelectedGrid(slot);
-            currentP();
-            printPlayerTurn();
+            getSelectedGrid(slot); 
             if (checkWin(currentPlayer)){
-                console.log('win');
+                pTurn.textContent = "The " + currentPlayer.player + " Win the game";
+                //let divboardDisable = document.getElementsByClassName("game-box");
+                //x.removeEventListener('click', selected);
             }
-           
-            console.log(grid);
-            
-        }
+            else if (turn < 9){
+                currentP();
+                printPlayerTurn();
+            }
+            else {
+                pTurn.textContent = "It's a Tie !";
+            }
+        } 
     }
     function getSelectedGrid(value){
         //3 for the 3 in the row and column, square of 9
@@ -93,6 +101,7 @@ currentPlayer = player1;
             [3, 4, 5],
             [6, 7, 8]
           ];
+          turn = 0;
         }
     // Reset game
    btnReset.addEventListener('click', (e)=> {
@@ -110,9 +119,9 @@ function checkWin(currentPlayer) {
   //If the value of row is the same return true
     else if (rotatedGrid.some(line => line.every(tile => tile === currentPlayer.symbol))) return true;
   //If the value of column is the same return true
-    else if ([0, 1, 2].every(i => grid[i][i]) === currentPlayer.symbol) return true;
+    else if ([0, 1, 2].every(i => grid[i][i] === currentPlayer.symbol)) return true;
   //If the diag top left to bottom right are the same return true 
-    else if ([0, 1, 2].every(i => grid[i][2 - i]) === currentPlayer.symbol) return true;
+    else if ([0, 1, 2].every(i => grid[i][2 - i] === currentPlayer.symbol)) return true;
   //If the diag top right to bottom left are the same return true 
     else return false;
   //return false if nothing is true
