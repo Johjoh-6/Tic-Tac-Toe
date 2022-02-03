@@ -74,8 +74,8 @@ currentPlayer = player1;
             getSelectedGrid(slot); 
             if (checkWin(currentPlayer)){
                 pTurn.textContent = "The " + currentPlayer.player + " Win the game";
-                //let divboardDisable = document.getElementsByClassName("game-box");
-                //x.removeEventListener('click', selected);
+                // let divboardDisable = document.getElementsByClassName("game-box");
+                // divboardDisable.removeEventListener('click', selected);
             }
             else if (turn < 9){
                 currentP();
